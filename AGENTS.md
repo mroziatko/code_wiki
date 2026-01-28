@@ -139,12 +139,30 @@ class Counter extends React.Component { ... }
 ### Styling Approach
 ```css
 /* Prefer semantic class names */
-.wiki-article { }
-.wiki-article__title { }
-.wiki-article__content { }
+.wiki-article {
+  padding: 1rem;
+}
 
-/* Avoid inline styles unless dynamic */
-<div style={{ color: 'red' }}> ❌
+.wiki-article__title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.wiki-article__content {
+  line-height: 1.6;
+}
+```
+
+```tsx
+// Avoid inline styles unless dynamic
+// ❌ Bad
+<div style={{ color: 'red' }}>Static content</div>
+
+// ✅ Good - use CSS classes
+<div className="error-text">Static content</div>
+
+// ✅ Good - inline styles for dynamic values
+<div style={{ width: `${progress}%` }}>Dynamic content</div>
 ```
 
 ### File Naming
@@ -157,7 +175,7 @@ class Counter extends React.Component { ... }
 
 ### Writing Tests
 ```typescript
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { Button } from './Button';
 
 describe('Button', () => {
@@ -170,7 +188,8 @@ describe('Button', () => {
     const handleClick = vi.fn();
     render(<Button label="Click" onClick={handleClick} />);
     
-    screen.getByText('Click').click();
+    const button = screen.getByText('Click');
+    fireEvent.click(button);
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 });
